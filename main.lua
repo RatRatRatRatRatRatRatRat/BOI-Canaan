@@ -1,0 +1,1 @@
+CANAAN = RegisterMod("Canaan", 1)

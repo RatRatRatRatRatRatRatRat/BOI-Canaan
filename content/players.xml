@@ -1,0 +1,6 @@
+<players root="gfx/characters/costumes/" portraitroot="gfx/ui/stage/" nameimageroot="gfx/ui/boss/">		 
+	<player name="Canaan" nameimage="playername_canaan.png" portrait="playerportrait_canaan.png"
+	skin="character_canaan.png" skinColor="-1" modcostume="1" costumeSuffix="canaan"
+	hp="2" black="2" shotspeedmodifier="-0.2"
+	birthright="Unfinished" />
+</players>

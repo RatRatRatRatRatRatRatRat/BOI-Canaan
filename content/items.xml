@@ -1,0 +1,8 @@
+<items gfxroot="gfx/items/" version="1" deathanm2="gfx/death items.anm2">
+	<passive  id="1" name="Can of Worms" description="HP up"                 gfx="collectible_canofworms.png"  quality="1" craftingquality="1"/>
+	<familiar id="2" name="The Hook"     description="This looks dangerous"  gfx="collectible_hook.png"        quality="2" craftingquality="2"/>
+	<passive  id="3" name="Rusty Bucket" description="Extra fish slot"       gfx="collectible_rustybucket.png" quality="2" craftingquality="2"/>
+	<passive  id="4" name="Magic Marker" description="Tears + shot speed up" gfx="collectible_magicmarker.png" quality="3" craftingquality="3"/>
+	<active   id="5" name="Wiseclock"    description="Item inverter"         gfx="collectible_wiseclock.png"   quality="3" craftingquality="3" maxcharges="6"/>
+	<active   id="6" name="Fishing Rod"  description="Item inverter"         gfx="collectible_fishingrod.png"  quality="3" craftingquality="3" maxcharges="90" chargetype="timed"/>
+</items>
