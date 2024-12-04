@@ -1,4 +1,3 @@
 <costumes anm2root="gfx/characters/">
-	<costume anm2path="character_002x_icesaacshead.anm2" type="none" id="1" hasSkinAlt="false" priority="20" />
-	<costume anm2path="character_001x_petershat.anm2" type="none" id="2" hasSkinAlt="false" priority="99" />
+	<costume id="1" type="none" anm2path="character_canaan.anm2" hasSkinAlt="false" priority="201" />
 </costumes>
