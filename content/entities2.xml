@@ -1,0 +1,10 @@
+<entities anm2root="gfx/" version="5" deathanm2="gfx/death_enemies.anm2">
+	<entity name="Mycelium Creep" id="1000" variant="2550" anm2path="effect_myceliumcreep.anm2" shadowSize="12"
+	friction="1" collisionRadius="10" collisionMass="12" numGridCollisionPoints="12" />
+
+    <!--Mushrooms-->
+	<entity name="Poison Mushroom" id="1000" variant="2551" subtype="0" anm2path="effect_canaanmushroom.anm2" shadowSize="12"
+	friction="1" collisionRadius="10" collisionMass="12" numGridCollisionPoints="12" />
+	<entity name="Buttery Mushroom" id="1000" variant="2551" subtype="1" anm2path="effect_canaanmushroom.anm2" shadowSize="12"
+	friction="1" collisionRadius="10" collisionMass="12" numGridCollisionPoints="12" />
+</entities>

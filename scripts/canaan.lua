@@ -10,13 +10,21 @@ mod.SporeTearBlacklist = {
 }
 
 ---@param player EntityPlayer
-function mod:CanaanCache(player)
-    if player:GetPlayerType() == canaan and player:HasWeaponType(WeaponType.WEAPON_TEARS) then
-        player:EnableWeaponType(WeaponType.WEAPON_TEARS, false)
-        player:EnableWeaponType(WeaponType.WEAPON_MONSTROS_LUNGS, true)
+---@param cache CacheFlag
+function mod:CanaanCache(player, cache)
+    if player:GetPlayerType() == canaan then
+        if cache & CacheFlag.CACHE_WEAPON > 0 and player:HasWeaponType(WeaponType.WEAPON_TEARS) then
+            player:EnableWeaponType(WeaponType.WEAPON_TEARS, false)
+            player:EnableWeaponType(WeaponType.WEAPON_MONSTROS_LUNGS, true)
+        end
+
+        if cache & CacheFlag.CACHE_TEARCOLOR > 0 then
+            player.TearColor = Color()
+            player.LaserColor = Color(1, 1, 1, 1, 0, 0, 0, 1.2, 0, 2.4, 1)
+        end
     end
 end
-mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.CanaanCache, CacheFlag.CACHE_WEAPON)
+mod:AddCallback(ModCallbacks.MC_EVALUATE_CACHE, mod.CanaanCache)
 
 ---@param player EntityPlayer
 function mod:CanaanEffectUpdate(player)
@@ -41,15 +49,12 @@ function mod:CanaanFireTear(tear)
         if not mod.SporeTearBlacklist[tear.Variant] then
             tear:ChangeVariant(TearVariant.SPORE)
         end
-        if tear.Color:__tostring() == Color.TearChocolate:__tostring() then
-            tear.Color = Color()
-        end
 
-        tear.CollisionDamage = tear.BaseDamage / 2
+        tear.CollisionDamage = tear.BaseDamage / 4
         tear:GetData().CanaanTear = true
     end
 end
-mod:AddCallback(ModCallbacks.MC_POST_FIRE_TEAR, mod.CanaanFireTear)
+mod:AddCallback(ModCallbacks.MC_POST_TEAR_INIT, mod.CanaanFireTear)
 
 ---@param tear EntityTear
 function mod:CanaanTearUpdate(tear)
@@ -60,3 +65,50 @@ function mod:CanaanTearUpdate(tear)
     end
 end
 mod:AddCallback(ModCallbacks.MC_PRE_TEAR_UPDATE, mod.CanaanTearUpdate)
+
+---@param laser EntityLaser
+function mod:CanaanFireLaser(laser)
+    local player = mod:GetPlayerFromTear(laser)
+    if player and player:GetPlayerType() == canaan then
+        laser.Color = Color(1, 1, 1, 1, 0, 0, 0, 1.2, 0, 2.4, 1)
+        laser:GetData().CanaanTear = true
+    end
+end
+mod:AddCallback(ModCallbacks.MC_POST_FIRE_BRIMSTONE, mod.CanaanFireLaser)
+mod:AddCallback(ModCallbacks.MC_POST_FIRE_TECH_LASER, mod.CanaanFireLaser)
+mod:AddCallback(ModCallbacks.MC_POST_FIRE_TECH_X_LASER, mod.CanaanFireLaser)
+
+---@param ent Entity
+---@param flags DamageFlag
+---@param source EntityRef
+function mod:AddInfectedStatus(ent, dmg, flags, source)
+    local npc = ent:ToNPC()
+    if npc and npc:IsVulnerableEnemy() then
+        if source.Type == EntityType.ENTITY_TEAR then
+            local tear = source.Entity:ToTear()
+            if tear and tear:GetData().CanaanTear then
+                local player = tear.SpawnerEntity:ToPlayer() or tear.SpawnerEntity:ToFamiliar().Player
+                if player then
+                    local rng = player:GetCollectibleRNG(CollectibleType.COLLECTIBLE_SAD_ONION)
+                    if rng:RandomFloat() < 0.1 then
+                        npc:GetData().CanaanInfected = true
+                        print("WOOO!")
+                    end
+                end
+            end
+        end
+    end
+end
+mod:AddCallback(ModCallbacks.MC_POST_ENTITY_TAKE_DMG, mod.AddInfectedStatus)
+
+---@param npc EntityNPC
+function mod:InfectedEnemyDeath(npc)
+    if npc:GetData().CanaanInfected then
+        local creep = Isaac.Spawn(EntityType.ENTITY_EFFECT, 2500, 0, npc.Position, Vector.Zero, nil):ToEffect()
+        if creep then
+            --creep.DepthOffset = -999999
+            creep.SortingLayer = SortingLayer.SORTING_BACKGROUND
+        end
+    end
+end
+mod:AddCallback(ModCallbacks.MC_POST_NPC_DEATH, mod.InfectedEnemyDeath)
